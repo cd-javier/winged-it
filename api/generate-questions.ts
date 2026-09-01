@@ -11,7 +11,7 @@ If usable is false: set "reason" to a short, specific, user-facing explanation o
 If usable is true: identify up to 4 points in their account that are vague or missing, limited to these categories:
 - quantity: an ingredient amount is unclear or missing
 - timing: a cooking time, oven temperature, or duration is missing or vague
-- technique: a cooking method or action is ambiguous
+- technique: a cooking or chopping method or action is ambiguous
 - ingredient: an ingredient is named ambiguously or a substitution/identity is unclear
 For each issue, write ONE short, specific question referencing what they actually wrote. Don't ask generic questions or questions about things already stated clearly. If fewer than 4 real issues exist, return fewer — don't invent filler.
 Each question must be answerable using only the original text — do not depend on answers to other questions.

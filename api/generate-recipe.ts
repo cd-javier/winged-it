@@ -11,9 +11,18 @@ One question asks "Do you wish you'd done anything differently?" If the user ans
 
 Reconstruct the recipe using the original text as the primary source and the other answers to fill gaps. Do not invent quantities, times, or techniques that were never stated anywhere and were not answered — leave those fields null or write "not specified" rather than guessing a specific number.
 
-Write ingredients as a clean list. Write steps as a clear, ordered sequence a person could actually follow, in plain instructional language.
+Write a short description of the dish, around 25 words (max 35). It should read like an enticing but plain summary of what the dish is, e.g. "A rich crispy rice bowl topped with pickled onion, a roasted pepper sauce, and crushed peanuts." This will be shown in full on the recipe page and truncated on a card, so make the opening words count on their own.
 
-Also produce an "at a glance" summary: prep time, cook time, total time, and approximate macros (calories, protein, carbs, fat) per serving. Base these on the ingredients and quantities given. If a quantity is missing or vague, make a reasonable estimate but do not fabricate false precision — round to sensible values. If servings can't be inferred, estimate a plausible default and state it.
+Write ingredients as a clean list. Each ingredient has:
+- "item": always singular (e.g. "onion", not "onions").
+- "quantity": always a number. If the amount is genuinely unspecified (e.g. "salt to taste"), use 0.
+- "unit": one of "g", "kg", "ml", "l", "tsp", "tbsp", "pinch of", "clove of", "slice of", "sprig of", or blank if the ingredient is a whole countable item (e.g. onion, egg, bell pepper) rather than a measured quantity.
+
+Write steps as a clear, ordered sequence a person could actually follow, in plain instructional language.
+
+Estimate servings as a number.
+
+Produce a summary: prepTime and cookTime as numbers in minutes. Also include approximate nutritional info per single serving (not for the whole dish): calories, protein, carbs, fat, fiber. Write each nutritional value as a string including its unit — calories in "kcal" (e.g. "420 kcal"), protein/carbs/fat/fiber in grams (e.g. "18g"). Base all of this on the ingredients and quantities given. If a quantity is missing or vague, make a reasonable estimate but do not fabricate false precision — round to sensible values. If servings can't be inferred, estimate a plausible default and state it.
 
 Give the recipe a short, plain title based on the dish.
 
@@ -23,27 +32,28 @@ const RESPONSE_SCHEMA = {
   type: Type.OBJECT,
   properties: {
     title: { type: Type.STRING },
-    servings: { type: Type.STRING },
-    atAGlance: {
+    description: { type: Type.STRING },
+    servings: { type: Type.NUMBER },
+    summary: {
       type: Type.OBJECT,
       properties: {
-        prepTime: { type: Type.STRING },
-        cookTime: { type: Type.STRING },
-        totalTime: { type: Type.STRING },
-        macros: {
+        prepTime: { type: Type.NUMBER },
+        cookTime: { type: Type.NUMBER },
+        nutritionalInfo: {
           type: Type.OBJECT,
           properties: {
             calories: { type: Type.STRING },
             protein: { type: Type.STRING },
             carbs: { type: Type.STRING },
             fat: { type: Type.STRING },
+            fiber: { type: Type.STRING },
           },
-          required: ['calories', 'protein', 'carbs', 'fat'],
-          propertyOrdering: ['calories', 'protein', 'carbs', 'fat'],
+          required: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
+          propertyOrdering: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
         },
       },
-      required: ['prepTime', 'cookTime', 'totalTime', 'macros'],
-      propertyOrdering: ['prepTime', 'cookTime', 'totalTime', 'macros'],
+      required: ['prepTime', 'cookTime', 'nutritionalInfo'],
+      propertyOrdering: ['prepTime', 'cookTime', 'nutritionalInfo'],
     },
     ingredients: {
       type: Type.ARRAY,
@@ -63,8 +73,22 @@ const RESPONSE_SCHEMA = {
       items: { type: Type.STRING },
     },
   },
-  required: ['title', 'servings', 'atAGlance', 'ingredients', 'steps'],
-  propertyOrdering: ['title', 'servings', 'atAGlance', 'ingredients', 'steps'],
+  required: [
+    'title',
+    'description',
+    'servings',
+    'summary',
+    'ingredients',
+    'steps',
+  ],
+  propertyOrdering: [
+    'title',
+    'description',
+    'servings',
+    'summary',
+    'ingredients',
+    'steps',
+  ],
 };
 
 interface GenerateRecipeResult {
