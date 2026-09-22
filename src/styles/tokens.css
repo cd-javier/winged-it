@@ -1,0 +1,33 @@
+:root {
+  /* Global tokens */
+  --color-yellow: #FFE27C;
+  --color-charcoal: #393113;
+  --color-neutral-light: #F7F7F6;
+  --color-warm-gray: #77715B;
+  --color-orange: #E9A97B;
+  --color-orange-dark: #6F3A14;
+  --color-red: #E18C87;
+  --color-red-dark: #632522;
+  --color-green: #BFE189;
+  --color-green-dark: #456612;
+  --color-blue: #8DA9E2;
+  --color-blue-dark: #243C6F;
+  --color-violet-dark: #833EA7;
+  --color-violet-light: #F1D6FF;
+
+  /* Semantic tokens */
+  --color-background: var(--color-yellow);
+  --color-surface: var(--color-neutral-light);
+  --color-text-primary: var(--color-charcoal);
+  --color-text-secondary: var(--color-warm-gray);
+  --color-accent-bg: var(--color-violet-dark);
+  --color-accent-text: var(--color-violet-light);
+  --color-warning-bg: var(--color-orange);
+  --color-warning-text: var(--color-orange-dark);
+  --color-error-bg: var(--color-red);
+  --color-error-text: var(--color-red-dark);
+  --color-success-bg: var(--color-green);
+  --color-success-text: var(--color-green-dark);
+  --color-info-bg: var(--color-blue);
+  --color-info-text: var(--color-blue-dark);
+}
