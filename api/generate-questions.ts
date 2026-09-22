@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
+import type { Question } from '../src/types/recipe';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -47,11 +48,7 @@ const RESPONSE_SCHEMA = {
 interface GenerateQuestionsResult {
   usable: boolean;
   reason: string;
-  questions: Array<{
-    id: string;
-    category: 'quantity' | 'timing' | 'technique' | 'ingredient';
-    question: string;
-  }>;
+  questions: Question[];
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

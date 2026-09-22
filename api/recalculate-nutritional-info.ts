@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
+import type { Ingredient, NutritionalInfo } from '../src/types/recipe';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -31,20 +32,6 @@ const RESPONSE_SCHEMA = {
   required: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
   propertyOrdering: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
 };
-
-interface Ingredient {
-  item: string;
-  quantity: number;
-  unit: string;
-}
-
-interface RecalculateNutritionalInfoResult {
-  calories: string;
-  protein: string;
-  carbs: string;
-  fat: string;
-  fiber: string;
-}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -95,7 +82,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(502).json({ error: 'Empty response from model' });
     }
 
-    const result = JSON.parse(outputText) as RecalculateNutritionalInfoResult;
+    const result = JSON.parse(outputText) as NutritionalInfo;
     return res.status(200).json(result);
   } catch (error) {
     console.error('recalculate-nutritional-info failed', error);

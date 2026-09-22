@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
+import type { Recipe, QuestionAnswer } from '../src/types/recipe';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -91,30 +92,6 @@ const RESPONSE_SCHEMA = {
   ],
 };
 
-interface GenerateRecipeResult {
-  title: string;
-  description: string;
-  servings: number;
-  summary: {
-    prepTime: number;
-    cookTime: number;
-    nutritionalInfo: {
-      calories: string;
-      protein: string;
-      carbs: string;
-      fat: string;
-      fiber: string;
-    };
-  };
-  ingredients: Array<{ item: string; quantity: number; unit: string }>;
-  steps: string[];
-}
-
-interface QuestionAnswer {
-  question: string;
-  answer: string;
-}
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -158,7 +135,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(502).json({ error: 'Empty response from model' });
     }
 
-    const result: GenerateRecipeResult = JSON.parse(outputText);
+    const result: Omit<Recipe, 'id'> = JSON.parse(outputText);
     return res.status(200).json(result);
   } catch (error) {
     console.error('generate-recipe failed', error);
