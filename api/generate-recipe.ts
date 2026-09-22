@@ -93,16 +93,17 @@ const RESPONSE_SCHEMA = {
 
 interface GenerateRecipeResult {
   title: string;
-  servings: string;
-  atAGlance: {
-    prepTime: string;
-    cookTime: string;
-    totalTime: string;
-    macros: {
+  description: string;
+  servings: number;
+  summary: {
+    prepTime: number;
+    cookTime: number;
+    nutritionalInfo: {
       calories: string;
       protein: string;
       carbs: string;
       fat: string;
+      fiber: string;
     };
   };
   ingredients: Array<{ item: string; quantity: number; unit: string }>;
@@ -157,7 +158,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(502).json({ error: 'Empty response from model' });
     }
 
-    const result = JSON.parse(outputText) as GenerateRecipeResult;
+    const result: GenerateRecipeResult = JSON.parse(outputText);
     return res.status(200).json(result);
   } catch (error) {
     console.error('generate-recipe failed', error);
