@@ -1,15 +1,28 @@
+export type IngredientUnit =
+  | 'g'
+  | 'kg'
+  | 'ml'
+  | 'l'
+  | 'tsp'
+  | 'tbsp'
+  | 'pinch'
+  | 'clove'
+  | 'slice'
+  | 'sprig'
+  | 'whole';
+
 export interface Ingredient {
   item: string;
   quantity: number;
-  unit: string;
+  unit: IngredientUnit;
 }
 
 export interface NutritionalInfo {
-  calories: string;
-  protein: string;
-  carbs: string;
-  fat: string;
-  fiber: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  fiber: number;
 }
 
 export type QuestionCategory = 'quantity' | 'timing' | 'technique' | 'ingredient';
@@ -37,4 +50,5 @@ export interface Recipe {
   };
   ingredients: Ingredient[];
   steps: string[];
+  image?: string;
 }

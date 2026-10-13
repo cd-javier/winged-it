@@ -16,18 +16,18 @@ Use the steps only to catch cooking effects that meaningfully change nutrition â
 
 Make reasonable estimates where quantities are vague, but do not fabricate false precision â€” round to sensible values.
 
-Write each nutritional value as a string including its unit: calories in "kcal" (e.g. "420 kcal"), protein/carbs/fat/fiber in grams (e.g. "18g").
+Write each nutritional value as a number only, with no units: calories in kcal, protein/carbs/fat/fiber in grams.
 
 Return only the structured output. No extra commentary.`;
 
 const RESPONSE_SCHEMA = {
   type: Type.OBJECT,
   properties: {
-    calories: { type: Type.STRING },
-    protein: { type: Type.STRING },
-    carbs: { type: Type.STRING },
-    fat: { type: Type.STRING },
-    fiber: { type: Type.STRING },
+    calories: { type: Type.NUMBER },
+    protein: { type: Type.NUMBER },
+    carbs: { type: Type.NUMBER },
+    fat: { type: Type.NUMBER },
+    fiber: { type: Type.NUMBER },
   },
   required: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
   propertyOrdering: ['calories', 'protein', 'carbs', 'fat', 'fiber'],

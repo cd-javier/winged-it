@@ -10,20 +10,20 @@ You will receive the original free-text account and a list of question/answer pa
 
 One question asks "Do you wish you'd done anything differently?" If the user answered it with a real suggestion (e.g. more of an ingredient, a different technique, a different time), apply that change directly into the relevant ingredient quantity or step — this recipe should reflect the improved version, not the exact original attempt. If they mention it, don't just note it, actually adjust the ingredient or step it refers to. If they left it blank or said nothing meaningful, make no changes.
 
-Reconstruct the recipe using the original text as the primary source and the other answers to fill gaps. Do not invent quantities, times, or techniques that were never stated anywhere and were not answered — leave those fields null or write "not specified" rather than guessing a specific number.
+Reconstruct the recipe using the original text as the primary source and the other answers to fill gaps. Do not invent quantities, times, or techniques that were never stated anywhere and were not answered.
 
 Write a short description of the dish, around 25 words (max 35). It should read like an enticing but plain summary of what the dish is, e.g. "A rich crispy rice bowl topped with pickled onion, a roasted pepper sauce, and crushed peanuts." This will be shown in full on the recipe page and truncated on a card, so make the opening words count on their own.
 
 Write ingredients as a clean list. Each ingredient has:
 - "item": always singular (e.g. "onion", not "onions").
-- "quantity": always a number. If the amount is genuinely unspecified (e.g. "salt to taste"), use 0.
-- "unit": one of "g", "kg", "ml", "l", "tsp", "tbsp", "pinch of", "clove of", "slice of", "sprig of", or blank if the ingredient is a whole countable item (e.g. onion, egg, bell pepper) rather than a measured quantity.
+- "quantity": required, always a number. If the amount is unspecified (e.g. "salt to taste"), use 0.
+- "unit": one of "g", "kg", "ml", "l", "tsp", "tbsp", "pinch", "clove", "slice", "sprig", "whole". Use "whole" for countable items (e.g. onion, egg, pepper) rather than a measured quantity.
 
 Write steps as a clear, ordered sequence a person could actually follow, in plain instructional language.
 
 Estimate servings as a number.
 
-Produce a summary: prepTime and cookTime as numbers in minutes. Also include approximate nutritional info per single serving (not for the whole dish): calories, protein, carbs, fat, fiber. Write each nutritional value as a string including its unit — calories in "kcal" (e.g. "420 kcal"), protein/carbs/fat/fiber in grams (e.g. "18g"). Base all of this on the ingredients and quantities given. If a quantity is missing or vague, make a reasonable estimate but do not fabricate false precision — round to sensible values. If servings can't be inferred, estimate a plausible default and state it.
+Produce a summary: prepTime and cookTime as numbers in minutes. Also include approximate nutritional info per single serving (not for the whole dish): calories, protein, carbs, fat, fiber. Write each nutritional value as a number only, with no units: calories in kcal, protein/carbs/fat/fiber in grams. Base all of this on the ingredients and quantities given. If a quantity is missing or vague, make a reasonable estimate but do not fabricate false precision — round to sensible values. If servings can't be inferred, estimate a plausible default and state it.
 
 Give the recipe a short, plain title based on the dish.
 
@@ -43,11 +43,11 @@ const RESPONSE_SCHEMA = {
         nutritionalInfo: {
           type: Type.OBJECT,
           properties: {
-            calories: { type: Type.STRING },
-            protein: { type: Type.STRING },
-            carbs: { type: Type.STRING },
-            fat: { type: Type.STRING },
-            fiber: { type: Type.STRING },
+            calories: { type: Type.NUMBER },
+            protein: { type: Type.NUMBER },
+            carbs: { type: Type.NUMBER },
+            fat: { type: Type.NUMBER },
+            fiber: { type: Type.NUMBER },
           },
           required: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
           propertyOrdering: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
@@ -63,7 +63,22 @@ const RESPONSE_SCHEMA = {
         properties: {
           item: { type: Type.STRING },
           quantity: { type: Type.NUMBER },
-          unit: { type: Type.STRING },
+          unit: {
+            type: Type.STRING,
+            enum: [
+              'g',
+              'kg',
+              'ml',
+              'l',
+              'tsp',
+              'tbsp',
+              'pinch',
+              'clove',
+              'slice',
+              'sprig',
+              'whole',
+            ],
+          },
         },
         required: ['item', 'quantity', 'unit'],
         propertyOrdering: ['item', 'quantity', 'unit'],
