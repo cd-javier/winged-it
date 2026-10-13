@@ -4,58 +4,36 @@ import type { Recipe, QuestionAnswer } from '../src/types/recipe';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-const SYSTEM_INSTRUCTION = `You are turning a home cook's informal account of a dish, plus their answers to clarifying questions, into a structured recipe card.
+const SYSTEM_INSTRUCTION = `You are turning a home cook's informal account of a dish, plus their answers to clarifying questions, into a structured recipe card. Use British English spelling (yoghurt, chilli, aubergine).
 
-You will receive the original free-text account and a list of question/answer pairs. Some answers may be empty — the user chose to skip that question. Treat empty answers as missing information, not as meaningful content.
+Input: the original free-text account and question/answer pairs. Answers marked "(skipped)" are missing information, not content.
 
-One question asks "Do you wish you'd done anything differently?" If the user answered it with a real suggestion (e.g. more of an ingredient, a different technique, a different time), apply that change directly into the relevant ingredient quantity or step — this recipe should reflect the improved version, not the exact original attempt. If they mention it, don't just note it, actually adjust the ingredient or step it refers to. If they left it blank or said nothing meaningful, make no changes.
+Sources: the original account comes first; the answers fill gaps. Keep every number the user stated exactly (quantities, times, tin sizes). Where a quantity or time is missing, estimate a realistic one, since a recipe needs them. Do not add ingredients or techniques that were never mentioned.
 
-Reconstruct the recipe using the original text as the primary source and the other answers to fill gaps. Do not invent quantities, times, or techniques that were never stated anywhere and were not answered.
+Improvements: if the user says anywhere, in the account or in the answer to "Do you wish you'd done anything differently?", that they would change something, apply it to the relevant ingredient or step. The recipe is the improved version. Make a modest, round adjustment, and let it override the original number it refers to. If nothing is said, change nothing.
 
-Write a short description of the dish, around 25 words (max 35). It should read like an enticing but plain summary of what the dish is, e.g. "A rich crispy rice bowl topped with pickled onion, a roasted pepper sauce, and crushed peanuts." This will be shown in full on the recipe page and truncated on a card, so make the opening words count on their own.
+Title: short, plain name of the dish.
 
-Write ingredients as a clean list. Each ingredient has:
-- "item": always singular (e.g. "onion", not "onions").
-- "quantity": required, always a number. If the amount is unspecified (e.g. "salt to taste"), use 0.
-- "unit": one of "g", "kg", "ml", "l", "tsp", "tbsp", "pinch", "clove", "slice", "sprig", "whole". Use "whole" for countable items (e.g. onion, egg, pepper) rather than a measured quantity.
+Description: one factual sentence of 15 to 25 words saying what the dish is and what it is served with. Do not start with "This" or repeat the title; open with the defining ingredients or style (e.g. "Spiced chickpeas and wilted spinach in a tomato sauce, served with toasted bread and yoghurt."). No promotional adjectives (hearty, delicious, satisfying, comforting). The opening words must stand alone because cards truncate it.
 
-Write steps as a clear, ordered sequence a person could actually follow, in plain instructional language.
+Ingredients, in order of first use:
+- "item": lowercase, as on a shopping list, no quantity. Singular when the unit is whole, clove, slice or sprig; otherwise the natural form ("chopped tomatoes", "chickpeas", "spinach", "olive oil"). Keep a short state if the user gave one ("tinned chickpeas, drained"). If the same ingredient is used in separate parts of the dish, list each separately and add its role to the item, e.g. "butter, for the filling" and "butter, for the crumble topping".
+- "quantity": required number. If unspecified (e.g. salt to taste), use 0 with unit "pinch".
+- "unit": one of "g", "kg", "ml", "l", "tsp", "tbsp", "pinch", "clove", "slice", "sprig", "whole". Use "whole" for countable items (onion, egg, lemon).
 
-Estimate servings as a number.
+Steps: ordered, imperative, plain language, ingredient names only, without quantities or state words (write "the chickpeas", not "the tinned chickpeas, drained"). Include serving as the last step if the user described it. Write oven temperatures in °C and say "fan" when the cook did (e.g. "200°C fan"). If an oven is used, the first step is to preheat it.
 
-Produce a summary: prepTime and cookTime as numbers in minutes. Also include approximate nutritional info per single serving (not for the whole dish): calories, protein, carbs, fat, fiber. Write each nutritional value as a number only, with no units: calories in kcal, protein/carbs/fat/fiber in grams. Base all of this on the ingredients and quantities given. If a quantity is missing or vague, make a reasonable estimate but do not fabricate false precision — round to sensible values. If servings can't be inferred, estimate a plausible default and state it.
+Servings: a whole number inferred from the quantities; use 2 if it can't be inferred.
 
-Give the recipe a short, plain title based on the dish.
+Summary: prepTime is minutes before cooking starts; cookTime is total minutes of cooking and waiting in the steps. Round both times to the nearest 5 minutes. Both must be consistent with the steps. Nutrition is per single serving, calculated from the final ingredient list: calories in kcal, protein/carbs/fat/fiber in grams, numbers only, rounded to sensible values.
 
-Return only the structured output. No extra commentary.`;
+Return only the structured output. No commentary.`;
 
 const RESPONSE_SCHEMA = {
   type: Type.OBJECT,
   properties: {
     title: { type: Type.STRING },
-    description: { type: Type.STRING },
     servings: { type: Type.NUMBER },
-    summary: {
-      type: Type.OBJECT,
-      properties: {
-        prepTime: { type: Type.NUMBER },
-        cookTime: { type: Type.NUMBER },
-        nutritionalInfo: {
-          type: Type.OBJECT,
-          properties: {
-            calories: { type: Type.NUMBER },
-            protein: { type: Type.NUMBER },
-            carbs: { type: Type.NUMBER },
-            fat: { type: Type.NUMBER },
-            fiber: { type: Type.NUMBER },
-          },
-          required: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
-          propertyOrdering: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
-        },
-      },
-      required: ['prepTime', 'cookTime', 'nutritionalInfo'],
-      propertyOrdering: ['prepTime', 'cookTime', 'nutritionalInfo'],
-    },
     ingredients: {
       type: Type.ARRAY,
       items: {
@@ -88,6 +66,28 @@ const RESPONSE_SCHEMA = {
       type: Type.ARRAY,
       items: { type: Type.STRING },
     },
+    summary: {
+      type: Type.OBJECT,
+      properties: {
+        prepTime: { type: Type.NUMBER },
+        cookTime: { type: Type.NUMBER },
+        nutritionalInfo: {
+          type: Type.OBJECT,
+          properties: {
+            calories: { type: Type.NUMBER },
+            protein: { type: Type.NUMBER },
+            carbs: { type: Type.NUMBER },
+            fat: { type: Type.NUMBER },
+            fiber: { type: Type.NUMBER },
+          },
+          required: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
+          propertyOrdering: ['calories', 'protein', 'carbs', 'fat', 'fiber'],
+        },
+      },
+      required: ['prepTime', 'cookTime', 'nutritionalInfo'],
+      propertyOrdering: ['prepTime', 'cookTime', 'nutritionalInfo'],
+    },
+    description: { type: Type.STRING },
   },
   required: [
     'title',
@@ -99,11 +99,11 @@ const RESPONSE_SCHEMA = {
   ],
   propertyOrdering: [
     'title',
-    'description',
     'servings',
-    'summary',
     'ingredients',
     'steps',
+    'summary',
+    'description',
   ],
 };
 

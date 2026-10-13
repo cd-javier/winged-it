@@ -25,7 +25,12 @@ export interface NutritionalInfo {
   fiber: number;
 }
 
-export type QuestionCategory = 'quantity' | 'timing' | 'technique' | 'ingredient';
+export type QuestionCategory =
+  | 'quantity'
+  | 'timing'
+  | 'technique'
+  | 'ingredient'
+  | 'servings';
 
 export interface Question {
   id: string;
