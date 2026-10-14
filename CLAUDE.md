@@ -30,7 +30,7 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 ## Conventions
 
 - CSS Modules only. No inline styles, no Tailwind.
-- Use tokens from `src/styles/tokens.css` (`--color-*`, `--font-*`). Figma output arrives as Tailwind with names like `--semantic/color-surface`; convert them to our tokens.
+- Use tokens from `src/styles/tokens.css` (`--color-*`, `--font-*`). Design values from Figma (Tailwind output, names like `--semantic/color-surface`) or from screenshots must be converted to our tokens.
 - Mobile-first, 402px column.
 - Button variants: primary, secondary, outline (cancel), destructive. The error (salmon) colour is for destructive actions only.
 - One `Dialog` component with variants, using native `<dialog>`.
@@ -57,7 +57,7 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 - Only do what is asked. Nothing extra.
 - Read files before editing. Prefer small edits over rewrites.
 - Do not re-read files that have not changed.
-- Figma MCP is limited to about 20 calls per month. Fetch each screen once with `get_design_context`, never re-fetch, and ask me for a screenshot if needed.
+- The Figma MCP limit is used up. Do not call any Figma tool. Work from the screenshots and design data I give you, and ask me if something is missing.
 - Gemini free tier is rate limited. No loops or repeated calls.
 - Never commit or push unless asked. Use conventional commit messages.
 - Never add co-author trailers, "Generated with Claude Code" lines, or any attribution to commits or PR descriptions.
