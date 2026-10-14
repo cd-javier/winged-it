@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
+import { ApiError, GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
 import type { Recipe, QuestionAnswer } from '../src/types/recipe';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -154,6 +154,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json(result);
   } catch (error) {
     console.error('generate-recipe failed', error);
+    if (error instanceof ApiError && error.status === 429) {
+      return res.status(429).json({ error: 'Rate limited' });
+    }
     return res.status(500).json({ error: 'Failed to generate recipe' });
   }
 }

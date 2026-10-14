@@ -49,6 +49,7 @@ export function formatIngredient({ item, quantity, unit }: Ingredient): string {
   }
 
   // pinch / clove / slice / sprig
-  const countUnit = quantity === 1 ? unit : `${unit}s`;
+  const plural = unit === 'pinch' ? 'pinches' : `${unit}s`;
+  const countUnit = quantity === 1 ? unit : plural;
   return `${formattedQuantity} ${countUnit} ${name}`;
 }

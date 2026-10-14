@@ -43,6 +43,12 @@ export interface QuestionAnswer {
   answer: string;
 }
 
+export interface GenerateQuestionsResult {
+  usable: boolean;
+  reason: string;
+  questions: Question[];
+}
+
 export interface Recipe {
   id: string;
   title: string;

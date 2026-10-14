@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
-import type { Question } from '../src/types/recipe';
+import { ApiError, GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
+import type { GenerateQuestionsResult } from '../src/types/recipe';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -51,12 +51,6 @@ const RESPONSE_SCHEMA = {
   propertyOrdering: ['usable', 'reason', 'questions'],
 };
 
-interface GenerateQuestionsResult {
-  usable: boolean;
-  reason: string;
-  questions: Question[];
-}
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -92,6 +86,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json(result);
   } catch (error) {
     console.error('generate-questions failed', error);
+    if (error instanceof ApiError && error.status === 429) {
+      return res.status(429).json({ error: 'Rate limited' });
+    }
     return res.status(500).json({ error: 'Failed to generate questions' });
   }
 }
