@@ -1,0 +1,30 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.note {
+  padding-bottom: var(--space-2);
+  font-size: var(--font-size-xs);
+  text-align: left;
+}
+
+.row {
+  border-bottom: 0.5px solid var(--color-divider);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.label,
+.value {
+  padding: var(--space-2);
+  font-weight: 400;
+  text-align: left;
+}
+
+.label {
+  width: 50%;
+}
