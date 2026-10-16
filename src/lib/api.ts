@@ -66,17 +66,28 @@ async function post<T>(
   }
 }
 
-export function generateQuestions(
+// Dev only: `import.meta.env.DEV` is false in production builds, so this branch and the dynamic import are removed.
+const useMock = import.meta.env.DEV && import.meta.env.VITE_MOCK_API === 'true';
+
+export async function generateQuestions(
   text: string,
   options: RequestOptions = {},
 ): Promise<GenerateQuestionsResult> {
+  if (useMock) {
+    const mock = await import('./mockApi');
+    return mock.generateQuestions(text, options);
+  }
   return post<GenerateQuestionsResult>('/api/generate-questions', { text }, options);
 }
 
-export function generateRecipe(
+export async function generateRecipe(
   text: string,
   answers: QuestionAnswer[],
   options: RequestOptions = {},
 ): Promise<Omit<Recipe, 'id'>> {
+  if (useMock) {
+    const mock = await import('./mockApi');
+    return mock.generateRecipe(text, answers, options);
+  }
   return post<Omit<Recipe, 'id'>>('/api/generate-recipe', { text, answers }, options);
 }

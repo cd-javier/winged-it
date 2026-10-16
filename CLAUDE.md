@@ -48,6 +48,7 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 ## Commands
 
 - `npm run dev`: frontend only. The API needs `vercel dev` with `GEMINI_API_KEY` in `.env.local`.
+- Mock API (dev only, no Gemini): set `VITE_MOCK_API=true` in `.env.local`, then `localStorage.mockScenario` to `success` (default), `unusable`, `rateLimit`, `network`, `generic` or `recipeError`.
 - `npm run lint`
 - `npx tsc -b`
 - `npm run build`: does NOT type-check. `api/` is not covered by any tsconfig.
