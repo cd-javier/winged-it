@@ -24,8 +24,8 @@ function formatQuantity(quantity: number): string {
 
 /**
  * Formats an ingredient for display, e.g.
- * "Basmati rice, 60g", "Olive oil, 1 tbsp", "Red onion, 1 (whole)",
- * "2 cloves garlic", "Salt (to taste)".
+ * "Basmati rice — 60g", "Olive oil — 1 tbsp", "Red onion — 1 (whole)",
+ * "Garlic cloves — 2", "Salt (to taste)".
  */
 export function formatIngredient({ item, quantity, unit }: Ingredient): string {
   const name = item.trim();
@@ -37,19 +37,19 @@ export function formatIngredient({ item, quantity, unit }: Ingredient): string {
   const formattedQuantity = formatQuantity(quantity);
 
   if (unit === 'whole') {
-    return `${capitalize(name)}, ${formattedQuantity} (whole)`;
+    return `${capitalize(name)} — ${formattedQuantity} (whole)`;
   }
 
   if (ATTACHED_UNITS.includes(unit)) {
-    return `${capitalize(name)}, ${formattedQuantity}${unit}`;
+    return `${capitalize(name)} — ${formattedQuantity}${unit}`;
   }
 
   if (SPACED_UNITS.includes(unit)) {
-    return `${capitalize(name)}, ${formattedQuantity} ${unit}`;
+    return `${capitalize(name)} — ${formattedQuantity} ${unit}`;
   }
 
   // pinch / clove / slice / sprig
   const plural = unit === 'pinch' ? 'pinches' : `${unit}s`;
   const countUnit = quantity === 1 ? unit : plural;
-  return `${formattedQuantity} ${countUnit} ${name}`;
+  return `${capitalize(name)} ${countUnit} — ${formattedQuantity}`;
 }

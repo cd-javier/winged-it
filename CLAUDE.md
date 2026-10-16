@@ -35,7 +35,7 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 - Button variants: primary, secondary, outline (cancel), destructive. The error (salmon) colour is for destructive actions and the error modal icon only.
 - One `Dialog` component with variants, using native `<dialog>`.
 - Semantic HTML. Props typed as `NameProps` interfaces. No `any`.
-- UI copy: British English, metric units, lowercase button labels, no em dashes.
+- UI copy: British English, metric units, lowercase button labels, no em dashes, except the separator in ingredient lines (formatIngredient).
 - LLM errors: map to friendly messages (rate limit, network, generic). Never show raw API text.
 
 ## Data
