@@ -1,4 +1,5 @@
 import Button from '../../components/Button/Button';
+import ErrorDialog from '../../components/ErrorDialog/ErrorDialog';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 import MessageDialog from '../../components/MessageDialog/MessageDialog';
 import RecipeInput from '../../components/RecipeInput/RecipeInput';
@@ -50,20 +51,12 @@ export default function NewRecipe() {
         <p>{modal?.type === 'unusable' ? modal.reason : ''}</p>
       </MessageDialog>
 
-      <MessageDialog
+      <ErrorDialog
         open={modal?.type === 'error'}
+        message={modal?.type === 'error' ? modal.message : ''}
+        onRetry={flow.retry}
         onClose={flow.dismissError}
-        variant="error"
-        title="Oops"
-        actions={
-          <Button variant="primary" onClick={flow.retry}>
-            try again
-          </Button>
-        }
-      >
-        <p>That didn't quite work.</p>
-        <p>{modal?.type === 'error' ? modal.message : ''}</p>
-      </MessageDialog>
+      />
 
       <MessageDialog
         open={flow.leaveOpen}

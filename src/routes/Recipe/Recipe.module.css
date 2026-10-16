@@ -1,2 +1,37 @@
 .recipe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.title,
+.description {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.title {
+  font-size: var(--font-size-xl);
+}
+
+.description {
+  font-size: var(--font-size-sm);
+}
+
+.notFound {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+}
+
+.notFound p {
+  margin: 0;
 }

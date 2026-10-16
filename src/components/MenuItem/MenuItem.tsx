@@ -6,7 +6,7 @@ import styles from './MenuItem.module.css';
 interface MenuItemProps {
   icon: ReactNode;
   title: string;
-  description: string;
+  description?: string;
   onClick: () => void;
 }
 
@@ -16,7 +16,7 @@ export default function MenuItem({ icon, title, description, onClick }: MenuItem
       <IconCircle icon={icon} />
       <span className={styles.text}>
         <span className={styles.title}>{title}</span>
-        <span className={styles.description}>{description}</span>
+        {description && <span className={styles.description}>{description}</span>}
       </span>
     </button>
   );

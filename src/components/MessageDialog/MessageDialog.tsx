@@ -12,6 +12,8 @@ interface MessageDialogProps {
   /** Called on Esc and backdrop click. */
   onClose: () => void;
   variant: MessageDialogVariant;
+  /** Replaces the default warning or error icon. */
+  icon?: ReactNode;
   title: string;
   /** One or more paragraphs. */
   children: ReactNode;
@@ -23,6 +25,7 @@ export default function MessageDialog({
   open,
   onClose,
   variant,
+  icon,
   title,
   children,
   actions,
@@ -32,7 +35,7 @@ export default function MessageDialog({
       <div className={styles.body}>
         <IconCircle
           variant={variant}
-          icon={variant === 'warning' ? <WarningIcon /> : <ErrorIcon />}
+          icon={icon ?? (variant === 'warning' ? <WarningIcon /> : <ErrorIcon />)}
         />
         <h2 className={styles.title}>{title}</h2>
         <div className={styles.message}>{children}</div>
