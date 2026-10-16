@@ -24,7 +24,7 @@ function formatQuantity(quantity: number): string {
 
 /**
  * Formats an ingredient for display, e.g.
- * "Basmati rice — 60g", "Olive oil — 1 tbsp", "Red onion — 1 (whole)",
+ * "Basmati rice — 60g", "Olive oil — 1 tbsp", "Red onion — 1",
  * "Garlic cloves — 2", "Salt (to taste)".
  */
 export function formatIngredient({ item, quantity, unit }: Ingredient): string {
@@ -37,7 +37,7 @@ export function formatIngredient({ item, quantity, unit }: Ingredient): string {
   const formattedQuantity = formatQuantity(quantity);
 
   if (unit === 'whole') {
-    return `${capitalize(name)} — ${formattedQuantity} (whole)`;
+    return `${capitalize(name)} — ${formattedQuantity}`;
   }
 
   if (ATTACHED_UNITS.includes(unit)) {
