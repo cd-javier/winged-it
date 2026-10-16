@@ -31,7 +31,7 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 
 - CSS Modules only. No inline styles, no Tailwind.
 - Use tokens from `src/styles/tokens.css` (`--color-*`, `--font-*`). Design values from Figma (Tailwind output, names like `--semantic/color-surface`) or from screenshots must be converted to our tokens.
-- Mobile-first, 402px column.
+- Mobile-first. The app column is capped by `--app-max-width` (`src/styles/tokens.css`).
 - Button variants: primary, secondary, outline (cancel), destructive. The error (salmon) colour is for destructive actions only.
 - One `Dialog` component with variants, using native `<dialog>`.
 - Semantic HTML. Props typed as `NameProps` interfaces. No `any`.

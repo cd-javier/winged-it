@@ -1,0 +1,46 @@
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.item:focus-visible {
+  outline: 2px solid var(--color-accent-bg);
+  outline-offset: 2px;
+}
+
+/* Divider between consecutive items: 16px of space on each side of the line. */
+.item:has(+ .item) {
+  padding-bottom: var(--space-3);
+  border-bottom: 0.5px solid var(--color-divider);
+}
+
+.item + .item {
+  padding-top: var(--space-3);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+}
+
+.description {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+}

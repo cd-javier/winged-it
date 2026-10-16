@@ -10,7 +10,7 @@ export default function FirstRecipe({ onClick }: FirstRecipeProps) {
   return (
     <button type="button" className={styles.row} onClick={onClick}>
       <IconCircle icon={<PlusIcon />} />
-      <span>add your first recipe</span>
+      <span>Add your first recipe</span>
     </button>
   );
 }

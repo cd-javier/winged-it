@@ -1,0 +1,33 @@
+.dialog {
+  max-width: none;
+  max-height: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.dialog::backdrop {
+  background: var(--color-overlay);
+}
+
+.bottom {
+  width: calc(min(100%, var(--app-max-width)) - 2 * var(--space-3));
+  margin: auto auto var(--space-3);
+}
+
+.center {
+  width: min(100%, var(--app-max-width));
+  margin: auto;
+}
+
+/* Receives the initial focus (not a button), so no ring shows on open. Buttons keep their own :focus-visible ring. */
+.content {
+  outline: none;
+}
+
+.sheet {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}

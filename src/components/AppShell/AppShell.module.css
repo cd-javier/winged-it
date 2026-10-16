@@ -1,6 +1,6 @@
 .shell {
   width: 100%;
-  max-width: 402px;
+  max-width: var(--app-max-width);
   min-height: 100dvh;
   margin-inline: auto;
 }

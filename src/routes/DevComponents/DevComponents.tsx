@@ -1,10 +1,14 @@
+import { useState } from 'react';
+
 import Button from '../../components/Button/Button';
+import Dialog from '../../components/Dialog/Dialog';
 import FirstRecipe from '../../components/FirstRecipe/FirstRecipe';
 import IconButton from '../../components/IconButton/IconButton';
-import { PlusIcon } from '../../components/Icons/Icons';
+import { PencilIcon, PlusIcon, WandIcon } from '../../components/Icons/Icons';
 import IngredientList from '../../components/IngredientList/IngredientList';
 import Loader from '../../components/Loader/Loader';
 import Logo from '../../components/Logo/Logo';
+import MenuItem from '../../components/MenuItem/MenuItem';
 import NutritionTable from '../../components/NutritionTable/NutritionTable';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import RecipeSection from '../../components/RecipeSection/RecipeSection';
@@ -38,6 +42,39 @@ const STEPS = [
 
 const NUTRITION: NutritionalInfo = { calories: 240, protein: 16, carbs: 58, fat: 20, fiber: 4 };
 
+function DialogDemo() {
+  const [open, setOpen] = useState<'bottom' | 'center' | null>(null);
+  const close = () => setOpen(null);
+
+  return (
+    <div className={styles.row}>
+      <Button variant="outline" onClick={() => setOpen('bottom')}>
+        bottom dialog
+      </Button>
+      <Button variant="outline" onClick={() => setOpen('center')}>
+        center dialog
+      </Button>
+      <Dialog open={open === 'bottom'} onClose={close} placement="bottom" label="Menu demo">
+        <MenuItem
+          icon={<WandIcon />}
+          title="Wing it"
+          description="Type what you did and let us do the rest"
+          onClick={close}
+        />
+        <MenuItem
+          icon={<PencilIcon />}
+          title="Enter manually"
+          description="Create the recipe entering every detail manually"
+          onClick={close}
+        />
+      </Dialog>
+      <Dialog open={open === 'center'} onClose={close} placement="center" label="Centre demo">
+        <p>Unstyled centre dialog</p>
+      </Dialog>
+    </div>
+  );
+}
+
 function Showcase() {
   return (
     <div className={styles.stack}>
@@ -59,6 +96,7 @@ function Showcase() {
         <Logo className={styles.logo} />
         <Loader className={styles.loader} />
       </div>
+      <DialogDemo />
       <FirstRecipe onClick={() => undefined} />
       <RecipeCard
         title="Crispy Rice Bowl with Pickled Onion"

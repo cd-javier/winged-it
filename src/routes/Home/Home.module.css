@@ -1,2 +1,85 @@
 .home {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3) 0;
+}
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--font-size-xl);
+}
+
+.logo {
+  width: 3.4375rem;
+}
+
+.input {
+  width: 100%;
+  height: 2.75rem;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+}
+
+.input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--color-accent-bg);
+  outline-offset: 2px;
+}
+
+.content {
+  padding: var(--space-3) var(--space-3) 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  /* Room for the FAB (3.5rem plus its offset) so the last card is never covered. */
+  padding: 0 0 calc(3.5rem + var(--space-5));
+  list-style: none;
+}
+
+.noResults {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+/* Sticky keeps the FAB at the bottom of the app column (not the viewport corner) while the list scrolls. */
+.fab {
+  position: sticky;
+  bottom: var(--space-5);
+  align-self: flex-end;
+  margin: auto var(--space-5) var(--space-5) 0;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
