@@ -53,7 +53,7 @@ export default function Dialog({
       <div
         ref={markAutofocus}
         tabIndex={-1}
-        className={placement === 'bottom' ? `${styles.content} ${styles.sheet}` : styles.content}
+        className={`${styles.content} ${styles.card}`}
       >
         {children}
       </div>

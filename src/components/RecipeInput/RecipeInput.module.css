@@ -1,0 +1,72 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 100dvh;
+  padding: var(--space-3);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+}
+
+.subtitle {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+/* The counter sits on top of the textarea, at the bottom right. */
+.field {
+  position: relative;
+  display: flex;
+  flex: 1;
+}
+
+.textarea {
+  flex: 1;
+  width: 100%;
+  padding: var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  resize: none;
+}
+
+.textarea::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.textarea:focus-visible {
+  outline: 2px solid var(--color-accent-bg);
+  outline-offset: 2px;
+}
+
+.counter {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-2);
+  margin: 0;
+  color: var(--color-error-text);
+  font-size: var(--font-size-xs);
+  pointer-events: none;
+}
+
+.enough {
+  color: var(--color-success-text);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}

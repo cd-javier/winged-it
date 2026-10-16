@@ -1,4 +1,5 @@
 import { useId, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Dialog from '../../components/Dialog/Dialog';
 import FirstRecipe from '../../components/FirstRecipe/FirstRecipe';
@@ -20,6 +21,7 @@ function matchesQuery(recipe: Recipe, query: string) {
 }
 
 export default function Home() {
+  const navigate = useNavigate();
   const { recipes, loading } = useRecipes();
   const [query, setQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -92,7 +94,7 @@ export default function Home() {
           icon={<WandIcon />}
           title="Wing it"
           description="Type what you did and let us do the rest"
-          onClick={() => {}}
+          onClick={() => navigate('/new')}
         />
         <MenuItem
           icon={<PencilIcon />}

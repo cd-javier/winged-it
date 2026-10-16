@@ -6,7 +6,20 @@
   width: 3.5rem;
   height: 3.5rem;
   border-radius: var(--radius-full);
+  font-size: 2rem;
+}
+
+.accent {
   background: var(--color-accent-bg);
   color: var(--color-accent-text);
-  font-size: 2rem;
+}
+
+.warning {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.error {
+  background: var(--color-error-bg);
+  color: var(--color-error-text);
 }

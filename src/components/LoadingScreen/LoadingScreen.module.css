@@ -1,0 +1,62 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 100dvh;
+  padding: var(--space-3);
+}
+
+.centre {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  text-align: center;
+}
+
+.loader {
+  font-size: 9rem;
+  color: var(--color-accent-bg);
+  animation: spin 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader {
+    animation: none;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.message {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+}
+
+/* Both spans share one grid cell: the hidden one sets the size, the typed one shows on top. */
+.phrase {
+  display: grid;
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+}
+
+.reserve,
+.typed {
+  grid-area: 1 / 1;
+}
+
+.reserve {
+  visibility: hidden;
+}
+
+.typed {
+  text-align: center;
+}
