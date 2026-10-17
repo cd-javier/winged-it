@@ -9,11 +9,12 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   white-space: nowrap;
 }
 
 .icon {
+  color: var(--color-text-secondary);
   font-size: 1.5rem;
 }
