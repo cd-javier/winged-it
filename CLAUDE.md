@@ -37,6 +37,8 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 - Semantic HTML. Props typed as `NameProps` interfaces. No `any`.
 - UI copy: British English, metric units, lowercase button labels, no em dashes, except the separator in ingredient lines (formatIngredient).
 - LLM errors: map to friendly messages (rate limit, network, generic). Never show raw API text.
+- Radius: buttons use --radius-sm (4px) or --radius-full. Everything else (cards, inputs, textareas, images, dialogs, sheets) uses --radius-md (8px). Never use other radii unless I say so.
+- Spacing: the default for card padding, screen padding and gaps between blocks is --space-3 (16px). Smaller gaps inside a block use --space-2 (8px).
 
 ## Data
 
@@ -66,3 +68,5 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 - Run lint, type-check and build after changes, and say what could not be verified.
 - I am a beginner: explain non-obvious patterns in 1-2 sentences.
 - Be concise. Push back if my request conflicts with these rules.
+- Before asking me for a design value (padding, gap, radius, font size, colour, icon size), look at how existing components and screens handle it (tokens.css and the *.module.css files). If the codebase uses one value consistently, use it, and list it in the plan under "Inferred from existing code, please confirm" with the file where you found the pattern. Only ask me for values that have no precedent in the code, or where the screenshot clearly shows something different from the existing pattern.
+- Never guess a value that has no precedent: ask for it once, in one batch.
