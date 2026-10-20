@@ -60,6 +60,11 @@
   --space-4: 1.5rem;
   --space-5: 2rem;
 
+  /* Form control padding: box inputs, and the borderless underline inputs used inside rows */
+  --control-padding-block: 0.75rem;
+  --control-padding: var(--control-padding-block) var(--space-3);
+  --control-padding-underline: var(--space-2);
+
   /* Radius */
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;

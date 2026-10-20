@@ -1,0 +1,40 @@
+/* Narrow cards: name and remove button on the first line, quantity and unit on the second. */
+.fields {
+  display: grid;
+  grid-template-areas:
+    'name name remove'
+    'quantity unit unit';
+  grid-template-columns: 3.5rem 1fr 2.5rem;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.name,
+.quantity,
+.unit {
+  min-width: 0;
+}
+
+.name {
+  grid-area: name;
+}
+
+.quantity {
+  grid-area: quantity;
+}
+
+.unit {
+  grid-area: unit;
+}
+
+.remove {
+  grid-area: remove;
+}
+
+/* From 19.5rem (312px) of card width everything fits on one line with the name at least 6.5rem (104px) wide. The query measures the RowCard around this grid, not the viewport. */
+@container (min-width: 19.5rem) {
+  .fields {
+    grid-template-areas: 'name quantity unit remove';
+    grid-template-columns: 1fr 3.5rem 5.5rem 2.5rem;
+  }
+}

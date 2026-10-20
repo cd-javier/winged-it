@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Button from '../../components/Button/Button';
 import Dialog from '../../components/Dialog/Dialog';
@@ -18,8 +18,10 @@ import MessageDialog from '../../components/MessageDialog/MessageDialog';
 import NutritionTable from '../../components/NutritionTable/NutritionTable';
 import RecipeHero from '../../components/RecipeHero/RecipeHero';
 import RecipeInfoCard from '../../components/RecipeInfoCard/RecipeInfoCard';
+import RecipeNotFound from '../../components/RecipeNotFound/RecipeNotFound';
 import RecipeSection from '../../components/RecipeSection/RecipeSection';
 import StepList from '../../components/StepList/StepList';
+import { useGoBack } from '../../hooks/useGoBack';
 import { useRecipe } from '../../hooks/useRecipe';
 import { ApiError } from '../../lib/api';
 import { deleteRecipe } from '../../lib/recipes';
@@ -35,7 +37,6 @@ interface RecipeViewProps {
 
 function RecipeView({ recipe }: RecipeViewProps) {
   const navigate = useNavigate();
-  const location = useLocation();
   const [servings, setServings] = useState(recipe.servings);
   const [modal, setModal] = useState<Modal | null>(null);
 
@@ -45,14 +46,7 @@ function RecipeView({ recipe }: RecipeViewProps) {
     [recipe.ingredients, recipe.servings, servings],
   );
 
-  // 'default' means this is the first entry in the app's history, so there is nowhere to go back to.
-  const goBack = () => {
-    if (location.key !== 'default') {
-      navigate(-1);
-    } else {
-      navigate('/');
-    }
-  };
+  const goBack = useGoBack('/');
 
   const closeModal = () => setModal(null);
   // Dialog's native close event also fires after we close it ourselves, a moment after the next modal may already be open. Only clear the modal if it is still this one.
@@ -95,7 +89,7 @@ function RecipeView({ recipe }: RecipeViewProps) {
 
       <header className={styles.header}>
         <h1 className={styles.title}>{recipe.title}</h1>
-        <p className={styles.description}>{recipe.description}</p>
+        {recipe.description && <p className={styles.description}>{recipe.description}</p>}
       </header>
 
       <RecipeInfoCard
@@ -111,13 +105,19 @@ function RecipeView({ recipe }: RecipeViewProps) {
       <RecipeSection title="Steps">
         <StepList steps={recipe.steps} />
       </RecipeSection>
-      <RecipeSection title="Nutritional Info">
-        <NutritionTable nutritionalInfo={recipe.summary.nutritionalInfo} />
-      </RecipeSection>
+      {recipe.summary.nutritionalInfo && (
+        <RecipeSection title="Nutritional Info">
+          <NutritionTable nutritionalInfo={recipe.summary.nutritionalInfo} />
+        </RecipeSection>
+      )}
 
       <Dialog open={modal === 'menu'} onClose={closeIfOpen('menu')} label="Recipe options">
-        {/* Edit and Export PDF are built in the next task, so for now they only close the sheet. */}
-        <MenuItem icon={<PencilIcon />} title="Edit" onClick={closeModal} />
+        {/* Export PDF is built in the next task, so for now it only closes the sheet. */}
+        <MenuItem
+          icon={<PencilIcon />}
+          title="Edit"
+          onClick={() => navigate(`/recipe/${recipe.id}/edit`)}
+        />
         <MenuItem icon={<DownloadIcon />} title="Export PDF" onClick={closeModal} />
         <MenuItem
           icon={<TrashIcon />}
@@ -163,12 +163,7 @@ export default function Recipe() {
   if (state.status === 'loading') return null;
 
   if (state.status === 'notFound') {
-    return (
-      <section className={styles.notFound}>
-        <p>Recipe not found</p>
-        <Link to="/">Back to home</Link>
-      </section>
-    );
+    return <RecipeNotFound />;
   }
 
   // Keyed by id so the servings and modal state start fresh for each recipe.

@@ -57,7 +57,8 @@ export interface Recipe {
   summary: {
     prepTime: number;
     cookTime: number;
-    nutritionalInfo: NutritionalInfo;
+    /** Missing on recipes entered manually without a calculation. */
+    nutritionalInfo?: NutritionalInfo;
   };
   ingredients: Ingredient[];
   steps: string[];

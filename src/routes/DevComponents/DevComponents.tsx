@@ -3,10 +3,19 @@ import { useState } from 'react';
 import Button from '../../components/Button/Button';
 import Dialog from '../../components/Dialog/Dialog';
 import FirstRecipe from '../../components/FirstRecipe/FirstRecipe';
+import Field from '../../components/Form/Field/Field';
+import IngredientRow from '../../components/Form/IngredientRow/IngredientRow';
+import PhotoField from '../../components/Form/PhotoField/PhotoField';
+import RemoveButton from '../../components/Form/RemoveButton/RemoveButton';
+import Select from '../../components/Form/Select/Select';
+import StepRow from '../../components/Form/StepRow/StepRow';
+import TextArea from '../../components/Form/TextArea/TextArea';
+import TextInput from '../../components/Form/TextInput/TextInput';
 import IconButton from '../../components/IconButton/IconButton';
 import { PencilIcon, PlusIcon, WandIcon } from '../../components/Icons/Icons';
 import IngredientList from '../../components/IngredientList/IngredientList';
 import Loader from '../../components/Loader/Loader';
+import LoadingDialog from '../../components/LoadingDialog/LoadingDialog';
 import Logo from '../../components/Logo/Logo';
 import MenuItem from '../../components/MenuItem/MenuItem';
 import NutritionTable from '../../components/NutritionTable/NutritionTable';
@@ -14,6 +23,8 @@ import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import RecipeSection from '../../components/RecipeSection/RecipeSection';
 import StepList from '../../components/StepList/StepList';
 import * as Icons from '../../components/Icons/Icons';
+import { INGREDIENT_UNITS } from '../../lib/recipeForm';
+import type { IngredientRowValue } from '../../lib/recipeForm';
 import type { Ingredient, NutritionalInfo } from '../../types/recipe';
 import styles from './DevComponents.module.css';
 
@@ -41,6 +52,104 @@ const STEPS = [
 ];
 
 const NUTRITION: NutritionalInfo = { calories: 240, protein: 16, carbs: 58, fat: 20, fiber: 4 };
+
+const UNIT_OPTIONS = INGREDIENT_UNITS.map((unit) => ({ value: unit, label: unit }));
+
+const FILLED_ROW: IngredientRowValue = { key: 'a', item: 'Basmati rice', quantity: '60', unit: 'g' };
+const EMPTY_ROW: IngredientRowValue = { key: 'b', item: '', quantity: '', unit: '' };
+
+// Focus can't be shown statically: tab into any control to see the purple outline.
+function FormDemo() {
+  const [text, setText] = useState('Crispy Chicken Bowl');
+  const [area, setArea] = useState('');
+  const [step, setStep] = useState(STEPS[1]);
+  const [unit, setUnit] = useState('');
+  const [image, setImage] = useState<string | undefined>();
+  const [calculating, setCalculating] = useState(false);
+  const noop = () => undefined;
+
+  return (
+    <>
+      <RecipeSection title="Form controls (tab to see focus)">
+        <Field label="Box, default">
+          {(props) => (
+            <TextInput {...props} placeholder="Name your recipe" value="" onChange={noop} />
+          )}
+        </Field>
+        <Field label="Box, filled">
+          {(props) => (
+            <TextInput {...props} value={text} onChange={(event) => setText(event.target.value)} />
+          )}
+        </Field>
+        <Field label="Box, error" error="Add a title">
+          {(props) => <TextInput {...props} value="" placeholder="Name your recipe" onChange={noop} />}
+        </Field>
+        <Field label="Box, disabled">
+          {(props) => <TextInput {...props} disabled value="Disabled" onChange={noop} />}
+        </Field>
+        <Field label="Servings" size="small" hint="Small label with a hint">
+          {(props) => <TextInput {...props} inputMode="numeric" value="1" onChange={noop} />}
+        </Field>
+        <Field label="Text area">
+          {(props) => (
+            <TextArea
+              {...props}
+              rows={2}
+              placeholder="A short summary of the dish"
+              value={area}
+              onChange={(event) => setArea(event.target.value)}
+            />
+          )}
+        </Field>
+        <Field label="Select, box">
+          {(props) => (
+            <Select
+              {...props}
+              placeholder="Unit"
+              options={UNIT_OPTIONS}
+              value={unit}
+              onChange={(event) => setUnit(event.target.value)}
+            />
+          )}
+        </Field>
+        <Field label="Select, box, error" error="Choose a unit">
+          {(props) => <Select {...props} placeholder="Unit" options={UNIT_OPTIONS} value="" onChange={noop} />}
+        </Field>
+        <Field label="Select, box, disabled">
+          {(props) => (
+            <Select {...props} disabled placeholder="Unit" options={UNIT_OPTIONS} value="g" onChange={noop} />
+          )}
+        </Field>
+      </RecipeSection>
+
+      <RecipeSection title="Rows">
+        <IngredientRow number={1} value={EMPTY_ROW} onChange={noop} onRemove={noop} />
+        <IngredientRow number={2} value={FILLED_ROW} onChange={noop} onRemove={noop} />
+        <IngredientRow
+          number={3}
+          value={{ ...EMPTY_ROW, item: 'Salt' }}
+          errors={{ item: false, quantity: true, unit: true }}
+          onChange={noop}
+          onRemove={noop}
+        />
+        <StepRow number={1} text="" onChange={noop} onRemove={noop} />
+        <StepRow number={2} text={step} onChange={setStep} onRemove={noop} />
+        <StepRow number={3} text="" invalid onChange={noop} onRemove={noop} />
+        <div className={styles.row}>
+          <RemoveButton label="remove demo" onClick={noop} />
+        </div>
+      </RecipeSection>
+
+      <PhotoField image={image} onChange={setImage} />
+      <div className={styles.row}>
+        <Button variant="outline" onClick={() => setCalculating(true)}>
+          loading dialog
+        </Button>
+      </div>
+      <LoadingDialog open={calculating} onCancel={() => setCalculating(false)} />
+    </>
+  );
+}
 
 function DialogDemo() {
   const [open, setOpen] = useState<'bottom' | 'center' | null>(null);
@@ -130,6 +239,7 @@ function Showcase() {
       <RecipeSection title="Nutritional Info">
         <NutritionTable nutritionalInfo={NUTRITION} />
       </RecipeSection>
+      <FormDemo />
       <RecipeSection title="Icons">
         <div className={styles.icons}>
           {Object.entries(Icons)

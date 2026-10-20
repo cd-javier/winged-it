@@ -5,13 +5,23 @@
   border-radius: var(--radius-md);
 }
 
-/* Darkens the top so the buttons stay visible on any image. The controls have z-index: 1 so they paint above it. */
-.hero::before {
+/* Darkens the top so the corner buttons stay visible on any image. The controls have z-index: 2 so they paint above it. */
+.shaded::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
   background: linear-gradient(to bottom, rgb(0 0 0 / 0.25) 0%, rgb(0 0 0 / 0) 50%);
+  pointer-events: none;
+}
+
+/* Darkens the whole image so the centred buttons stay visible on any photo. */
+.dimmed::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--color-overlay);
   pointer-events: none;
 }
 
@@ -51,4 +61,14 @@
 
 .end {
   right: var(--space-3);
+}
+
+.centre {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
 }

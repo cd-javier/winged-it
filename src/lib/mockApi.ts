@@ -1,5 +1,11 @@
 // Dev only: loaded by src/lib/api.ts when VITE_MOCK_API is 'true'. Never part of the production bundle.
-import type { GenerateQuestionsResult, QuestionAnswer, Recipe } from '../types/recipe';
+import type {
+  GenerateQuestionsResult,
+  Ingredient,
+  NutritionalInfo,
+  QuestionAnswer,
+  Recipe,
+} from '../types/recipe';
 import { ApiError } from './api';
 
 const MOCK_DELAY_MS = 6000;
@@ -105,5 +111,28 @@ export async function generateRecipe(
       'Return the chicken to the pan, cover and bake for 20 minutes.',
       'Stir in the cream, taste for salt and scatter over the torn basil before serving.',
     ],
+  };
+}
+
+export async function calculateNutrition(
+  ingredients: Ingredient[],
+  _servings: number,
+  _steps: string[],
+  { signal }: RequestOptions = {},
+): Promise<NutritionalInfo> {
+  await wait(signal);
+  const scenario = getScenario();
+  if (scenario === 'rateLimit' || scenario === 'network' || scenario === 'generic') {
+    throw new ApiError(scenario);
+  }
+
+  // Already rounded (calories to a multiple of 5, whole grams), and varying with the ingredient count so a recalculation visibly changes.
+  const count = ingredients.length;
+  return {
+    calories: 150 + count * 30,
+    protein: 8 + count * 2,
+    carbs: 20 + count * 3,
+    fat: 6 + count * 2,
+    fiber: 2 + count,
   };
 }

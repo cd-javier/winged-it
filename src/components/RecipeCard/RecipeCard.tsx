@@ -48,7 +48,7 @@ export default function RecipeCard({
             {title}
           </Link>
         </h3>
-        <p className={styles.description}>{description}</p>
+        {description && <p className={styles.description}>{description}</p>}
         <ul className={styles.times} role="list">
           {times.map(({ label, minutes, icon }) => (
             <li key={label} className={styles.time}>

@@ -1,5 +1,7 @@
 import type {
   GenerateQuestionsResult,
+  Ingredient,
+  NutritionalInfo,
   QuestionAnswer,
   Recipe,
 } from '../types/recipe';
@@ -90,4 +92,34 @@ export async function generateRecipe(
     return mock.generateRecipe(text, answers, options);
   }
   return post<Omit<Recipe, 'id'>>('/api/generate-recipe', { text, answers }, options);
+}
+
+/** Calories to the nearest 5, everything else to the nearest whole number. */
+function roundNutrition(info: NutritionalInfo): NutritionalInfo {
+  return {
+    calories: Math.round(info.calories / 5) * 5,
+    protein: Math.round(info.protein),
+    carbs: Math.round(info.carbs),
+    fat: Math.round(info.fat),
+    fiber: Math.round(info.fiber),
+  };
+}
+
+/** Estimates nutrition per serving. The steps are sent too, because the endpoint uses them (for example frying oil). */
+export async function calculateNutrition(
+  ingredients: Ingredient[],
+  servings: number,
+  steps: string[],
+  options: RequestOptions = {},
+): Promise<NutritionalInfo> {
+  if (useMock) {
+    const mock = await import('./mockApi');
+    return roundNutrition(await mock.calculateNutrition(ingredients, servings, steps, options));
+  }
+  const info = await post<NutritionalInfo>(
+    '/api/recalculate-nutritional-info',
+    { ingredients, servings, steps },
+    options,
+  );
+  return roundNutrition(info);
 }

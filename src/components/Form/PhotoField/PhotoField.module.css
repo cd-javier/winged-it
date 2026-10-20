@@ -1,0 +1,27 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.empty {
+  height: 5rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.empty:focus-visible {
+  outline: 2px solid var(--color-accent-bg);
+  outline-offset: 2px;
+}
+
+.error {
+  margin: 0;
+  color: var(--color-error-text);
+  font-size: var(--font-size-xs);
+}

@@ -1,0 +1,39 @@
+.fixed,
+.growing {
+  resize: none;
+}
+
+.grow {
+  display: grid;
+}
+
+.grow::after,
+.growing {
+  grid-area: 1 / 1;
+}
+
+.grow::after {
+  /* The trailing space keeps a final line break from collapsing. */
+  content: attr(data-value) ' ';
+  box-sizing: border-box;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+  visibility: hidden;
+}
+
+.growBox::after {
+  padding: var(--control-padding);
+}
+
+.growUnderline::after {
+  padding: var(--control-padding-underline);
+  border-bottom: 1px solid transparent;
+}
+
+.growing {
+  min-width: 0;
+  overflow: hidden;
+}

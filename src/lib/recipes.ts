@@ -13,8 +13,9 @@ async function loadCache(): Promise<Recipe[]> {
 }
 
 async function saveCache(recipes: Recipe[]): Promise<void> {
-  cache = recipes;
   await localforage.setItem(RECIPES_KEY, recipes);
+  // Only after the write succeeds, so a failed save leaves the cache as it was and a retry cannot add a duplicate.
+  cache = recipes;
 }
 
 export async function getAllRecipes(): Promise<Recipe[]> {

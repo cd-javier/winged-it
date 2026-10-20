@@ -1,0 +1,73 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+}
+
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: start;
+  gap: var(--space-2);
+}
+
+.number {
+  text-align: center;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-lg);
+}
+
+.sectionError {
+  margin: 0 0 var(--space-1);
+  color: var(--color-error-text);
+  font-size: var(--font-size-xs);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-xs);
+}
+
+.table {
+  margin-bottom: var(--space-2);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+/* Between 2 and 5 lines of text (the padding is added on top). The ::after is the hidden copy that sizes the auto-growing textarea, so it needs the same limits. Past 5 lines the textarea scrolls. */
+.description::after,
+.description textarea {
+  min-height: calc(2lh + 2 * var(--control-padding-block));
+  max-height: calc(5lh + 2 * var(--control-padding-block));
+}
+
+.description textarea {
+  overflow-y: auto;
+}

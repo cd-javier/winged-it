@@ -1,0 +1,49 @@
+/* The one look shared by TextInput, TextArea and Select. */
+.control {
+  width: 100%;
+  border: 0;
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+}
+
+.control::placeholder {
+  color: var(--color-text-secondary);
+}
+
+/* White box, used on its own. */
+.box {
+  padding: var(--control-padding);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+/* Bottom border only, used inside ingredient and step rows. The row card shows focus and error instead. */
+.underline {
+  min-height: 2.5rem;
+  padding: var(--control-padding-underline);
+  border-bottom: 1px solid var(--color-text-secondary);
+  border-radius: 0;
+  background: transparent;
+}
+
+.control[aria-invalid='true'] {
+  outline: 2px solid var(--color-error-bg);
+  outline-offset: 2px;
+}
+
+/* After the error rule, so the purple focus outline wins while the control has focus. */
+.control:focus-visible {
+  outline: 2px solid var(--color-accent-bg);
+  outline-offset: 2px;
+}
+
+.underline:focus-visible,
+.underline[aria-invalid='true'] {
+  outline: 0;
+}
+
+.control:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

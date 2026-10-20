@@ -1,6 +1,7 @@
 import { useId } from 'react';
 
 import Button from '../Button/Button';
+import TextArea from '../Form/TextArea/TextArea';
 import SegmentedProgress from '../SegmentedProgress/SegmentedProgress';
 import styles from './RecipeQuestions.module.css';
 
@@ -48,7 +49,7 @@ export default function RecipeQuestions({
         {question}
       </h2>
 
-      <textarea
+      <TextArea
         className={styles.textarea}
         placeholder="Type your answer here"
         value={answer}

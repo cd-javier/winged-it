@@ -29,24 +29,6 @@
 
 .textarea {
   flex: 1;
-  width: 100%;
-  padding: var(--space-3);
-  border: 0;
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: var(--color-text-primary);
-  font-family: var(--font-body);
-  font-size: var(--font-size-sm);
-  resize: none;
-}
-
-.textarea::placeholder {
-  color: var(--color-text-secondary);
-}
-
-.textarea:focus-visible {
-  outline: 2px solid var(--color-accent-bg);
-  outline-offset: 2px;
 }
 
 .actions {

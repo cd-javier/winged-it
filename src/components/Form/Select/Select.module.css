@@ -1,0 +1,39 @@
+.wrapper {
+  position: relative;
+  display: block;
+}
+
+/* The selectors below start with .wrapper so they win over the shared control padding and colour whatever the stylesheet order. */
+.wrapper .select {
+  appearance: none;
+  text-overflow: ellipsis;
+}
+
+/* Room for the chevron. */
+.underline .select {
+  padding-right: var(--space-4);
+}
+
+.box .select {
+  padding-right: calc(var(--space-3) * 2 + 1em);
+}
+
+/* The placeholder option is selected, so style the closed select like placeholder text. */
+.wrapper .empty {
+  color: var(--color-text-secondary);
+}
+
+.chevron {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  pointer-events: none;
+}
+
+.underline .chevron {
+  right: 0;
+}
+
+.box .chevron {
+  right: var(--space-3);
+}

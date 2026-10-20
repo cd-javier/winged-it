@@ -1,8 +1,10 @@
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Dialog from '../../components/Dialog/Dialog';
 import FirstRecipe from '../../components/FirstRecipe/FirstRecipe';
+import Field from '../../components/Form/Field/Field';
+import TextInput from '../../components/Form/TextInput/TextInput';
 import IconButton from '../../components/IconButton/IconButton';
 import { PencilIcon, PlusIcon, WandIcon } from '../../components/Icons/Icons';
 import Logo from '../../components/Logo/Logo';
@@ -25,8 +27,6 @@ export default function Home() {
   const { recipes, loading } = useRecipes();
   const [query, setQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
-  // useId links the visually hidden label to the input.
-  const searchId = useId();
 
   const normalisedQuery = query.trim().toLowerCase();
   const visible = normalisedQuery
@@ -68,19 +68,17 @@ export default function Home() {
           <Logo className={styles.logo} />
           winged it
         </h1>
-        <div className={styles.search}>
-          <label htmlFor={searchId} className={styles.visuallyHidden}>
-            Search recipes
-          </label>
-          <input
-            id={searchId}
-            type="search"
-            className={styles.input}
-            placeholder="Search"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </div>
+        <Field label="Search recipes" hideLabel>
+          {(controlProps) => (
+            <TextInput
+              {...controlProps}
+              type="search"
+              placeholder="Search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          )}
+        </Field>
       </header>
 
       <div className={styles.content}>{content}</div>
@@ -100,7 +98,7 @@ export default function Home() {
           icon={<PencilIcon />}
           title="Enter manually"
           description="Create the recipe entering every detail manually"
-          onClick={() => {}}
+          onClick={() => navigate('/new/manual')}
         />
       </Dialog>
     </section>

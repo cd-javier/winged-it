@@ -1,0 +1,18 @@
+/* The container lets the ingredient row react to the card's own width, not the viewport's. */
+.card {
+  container-type: inline-size;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.invalid {
+  outline: 2px solid var(--color-error-bg);
+  outline-offset: 2px;
+}
+
+/* After .invalid and more specific, so the purple focus outline wins while a control inside has focus. */
+.card:focus-within {
+  outline: 2px solid var(--color-accent-bg);
+  outline-offset: 2px;
+}
