@@ -22,6 +22,7 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 ## Structure
 
 - `src/components/Name/Name.tsx` + `Name.module.css`
+- Form components (Field, TextInput, TextArea, Select, rows, PhotoField, RecipeForm) live in `src/components/Form/Name/Name.tsx` + `Name.module.css`.
 - `src/routes/Name/Name.tsx` + `Name.module.css`
 - `src/hooks`, `src/lib`, `src/types`, `src/styles`
 - Figma layer names map to PascalCase components.
@@ -32,7 +33,7 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 - CSS Modules only. No inline styles, no Tailwind.
 - Use tokens from `src/styles/tokens.css` (`--color-*`, `--font-*`). Design values from Figma (Tailwind output, names like `--semantic/color-surface`) or from screenshots must be converted to our tokens.
 - Mobile-first. The app column is capped by `--app-max-width` (`src/styles/tokens.css`).
-- Button variants: primary, secondary, outline (cancel), destructive. The error (salmon) colour is for destructive actions and the error modal icon only.
+- Button variants: primary, secondary, outline (cancel), destructive. The error (salmon) colour is for destructive actions, the error modal icon, and form errors (field and row error outlines, error messages, the remove-row button).
 - One `Dialog` component with variants, using native `<dialog>`.
 - Semantic HTML. Props typed as `NameProps` interfaces. No `any`.
 - UI copy: British English, metric units, lowercase button labels, no em dashes, except the separator in ingredient lines (formatIngredient).
@@ -50,7 +51,7 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 ## Commands
 
 - `npm run dev`: frontend only. The API needs `vercel dev` with `GEMINI_API_KEY` in `.env.local`.
-- Mock API (dev only, no Gemini): set `VITE_MOCK_API=true` in `.env.local`, then `localStorage.mockScenario` to `success` (default), `unusable`, `rateLimit`, `network`, `generic` or `recipeError`.
+- Mock API (dev only, no Gemini): set `VITE_MOCK_API=true` in `.env.local`, then `localStorage.mockScenario` to `success` (default), `unusable`, `rateLimit`, `network`, `generic` or `recipeError`. The nutrition calculation (`api/recalculate-nutritional-info`) is mocked too and honours `rateLimit`, `network` and `generic`.
 - `npm run lint`
 - `npx tsc -b`
 - `npm run build`: does NOT type-check. `api/` is not covered by any tsconfig.
