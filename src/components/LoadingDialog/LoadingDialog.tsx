@@ -7,15 +7,16 @@ interface LoadingDialogProps {
   open: boolean;
   /** Called by the cancel button, Esc and a click on the backdrop. */
   onCancel: () => void;
-  /** Accessible name, announced as the status. */
+  /** Accessible name of the dialog. */
   label?: string;
 }
 
 export default function LoadingDialog({ open, onCancel, label = 'Calculating' }: LoadingDialogProps) {
   return (
     <Dialog open={open} onClose={onCancel} placement="center" label={label}>
-      <div className={styles.body} role="status" aria-label={label}>
+      <div className={styles.body} role="status">
         <Loader className={styles.loader} />
+        <p className={styles.title}>Loading...</p>
         <Button variant="outline" fullWidth onClick={onCancel}>
           cancel
         </Button>

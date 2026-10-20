@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useEffect, useId, useRef } from 'react';
 
 import { countWords, MIN_WORDS } from '../../lib/wordCount';
 import Button from '../Button/Button';
@@ -19,8 +19,36 @@ export default function RecipeInput({ text, onTextChange, onBack, onContinue }: 
   const words = countWords(text);
   const enough = words >= MIN_WORDS;
 
+  const screenRef = useRef<HTMLElement>(null);
+
+  // CSS cannot read the textarea's scrollbar width, so it is measured and handed to the styles as a variable. It is 0 for overlay scrollbars (phones) and before the text overflows.
+  useEffect(() => {
+    const screen = screenRef.current;
+    const textarea = screen?.querySelector('textarea');
+    if (!screen || !textarea) return;
+
+    const measure = () => {
+      screen.style.setProperty('--scrollbar-width', `${textarea.offsetWidth - textarea.clientWidth}px`);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(textarea);
+    return () => observer.disconnect();
+  }, []);
+
+  // A scrollbar appears once the text overflows, which does not resize the textarea.
+  useEffect(() => {
+    const textarea = screenRef.current?.querySelector('textarea');
+    if (!textarea) return;
+    screenRef.current?.style.setProperty(
+      '--scrollbar-width',
+      `${textarea.offsetWidth - textarea.clientWidth}px`,
+    );
+  }, [text]);
+
   return (
-    <section className={styles.screen}>
+    <section ref={screenRef} className={styles.screen}>
       <header className={styles.header}>
         <h1 className={styles.title}>Wing it</h1>
         <p className={styles.subtitle}>

@@ -36,7 +36,7 @@ export default function IngredientRow({
     <RowCard invalid={invalid}>
       <div className={styles.fields}>
         <Field
-          label={`Ingredient ${number} name`}
+          label={`Ingredient ${number}`}
           hideLabel
           invalid={errors?.item}
           describedBy={errors ? describedBy : undefined}

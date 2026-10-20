@@ -8,5 +8,5 @@ interface TextInputProps extends ComponentPropsWithRef<'input'> {
 }
 
 export default function TextInput({ variant = 'box', className, ...props }: TextInputProps) {
-  return <input className={controlClass(variant, className)} {...props} />;
+  return <input autoComplete="off" className={controlClass(variant, className)} {...props} />;
 }

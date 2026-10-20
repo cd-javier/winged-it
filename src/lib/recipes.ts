@@ -1,5 +1,6 @@
 import localforage from 'localforage';
 import type { Recipe } from '../types/recipe';
+import { createId } from './createId';
 
 const RECIPES_KEY = 'recipes';
 
@@ -29,7 +30,7 @@ export async function getRecipeById(id: string): Promise<Recipe | undefined> {
 
 export async function addRecipe(recipe: Omit<Recipe, 'id'>): Promise<Recipe> {
   const recipes = await loadCache();
-  const newRecipe: Recipe = { ...recipe, id: crypto.randomUUID() };
+  const newRecipe: Recipe = { ...recipe, id: createId() };
   await saveCache([...recipes, newRecipe]);
   return newRecipe;
 }

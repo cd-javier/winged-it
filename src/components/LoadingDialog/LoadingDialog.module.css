@@ -6,9 +6,16 @@
 }
 
 .loader {
-  font-size: 5rem;
+  font-size: 10rem;
   color: var(--color-accent-bg);
   animation: spin 4s linear infinite;
+}
+
+/* Same look as a dialog title. */
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
 }
 
 @media (prefers-reduced-motion: reduce) {

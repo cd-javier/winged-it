@@ -17,7 +17,13 @@ export default function TextArea({
   ...props
 }: TextAreaProps) {
   if (!autoGrow) {
-    return <textarea className={controlClass(variant, `${styles.fixed} ${className ?? ''}`)} {...props} />;
+    return (
+      <textarea
+        autoComplete="off"
+        className={controlClass(variant, `${styles.fixed} ${className ?? ''}`)}
+        {...props}
+      />
+    );
   }
 
   // The wrapper's ::after repeats the text invisibly in the same grid cell, so the cell is as tall as the text and the textarea stretches to fill it. This grows the textarea without measuring or inline styles.
@@ -34,6 +40,7 @@ export default function TextArea({
     >
       <textarea
         rows={1}
+        autoComplete="off"
         className={controlClass(variant, styles.growing)}
         {...props}
       />

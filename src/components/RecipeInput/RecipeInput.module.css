@@ -24,17 +24,36 @@
 
 /* The counter sits on top of the textarea, at the bottom right. */
 .field {
+  /* The opaque strip behind the counter: its offset, its height and a gap. */
+  --counter-zone: calc(var(--space-2) + var(--font-size-xs) * 0.8 + var(--space-1));
+  /* The fade above the strip, a little over half a line of text. */
+  --fade: calc(var(--font-size-sm) * 1);
+
   position: relative;
   flex: 1;
 }
 
-.textarea {
+/* Hides text scrolling behind the counter. Fully opaque behind it, then fades out upward. Taps pass through to the textarea. It stops before the scrollbar. The floor covers overlay scrollbars (width 0), which are drawn over the right edge, where the control's padding means there is no text anyway. */
+.field::after {
+  content: '';
+  position: absolute;
+  inset: auto max(var(--scrollbar-width, 0px), var(--space-3)) 0 0;
+  height: calc(var(--counter-zone) + var(--fade));
+  border-radius: 0 0 0 var(--radius-md);
+  background: linear-gradient(to top, var(--color-surface) var(--counter-zone), transparent);
+  pointer-events: none;
+}
+
+/* The strip plus a small gap, so the last line clears the gradient at the end of the scroll. */
+.field .textarea {
   flex: 1;
+  padding-bottom: calc(var(--counter-zone) + var(--space-2));
 }
 
 .counter {
+  z-index: 1;
   position: absolute;
-  right: var(--space-3);
+  right: calc(var(--scrollbar-width, 0px) + var(--space-3));
   bottom: var(--space-2);
   margin: 0;
   color: var(--color-error-text);
