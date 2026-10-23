@@ -3,6 +3,7 @@ import type {
   GenerateQuestionsResult,
   Ingredient,
   NutritionalInfo,
+  NutritionPrevious,
   QuestionAnswer,
   Recipe,
 } from '../types/recipe';
@@ -118,12 +119,25 @@ export async function calculateNutrition(
   ingredients: Ingredient[],
   _servings: number,
   _steps: string[],
-  { signal }: RequestOptions = {},
+  { signal, previous }: RequestOptions & { previous?: NutritionPrevious } = {},
 ): Promise<NutritionalInfo> {
   await wait(signal);
   const scenario = getScenario();
   if (scenario === 'rateLimit' || scenario === 'network' || scenario === 'generic') {
     throw new ApiError(scenario);
+  }
+
+  // A recalculation scales the previous values by the ingredient count ratio, so small edits give small changes.
+  if (previous) {
+    const ratio = ingredients.length / previous.ingredients.length;
+    const { calories, protein, carbs, fat, fiber } = previous.nutritionalInfo;
+    return {
+      calories: calories * ratio,
+      protein: protein * ratio,
+      carbs: carbs * ratio,
+      fat: fat * ratio,
+      fiber: fiber * ratio,
+    };
   }
 
   // Already rounded (calories to a multiple of 5, whole grams), and varying with the ingredient count so a recalculation visibly changes.

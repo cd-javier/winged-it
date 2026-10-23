@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from 'react';
 
 import { ApiError, calculateNutrition } from '../lib/api';
 import { completeIngredients, nonEmptySteps, nutritionSignature, parseServings } from '../lib/recipeForm';
-import type { FormValues } from '../lib/recipeForm';
-import type { NutritionalInfo } from '../types/recipe';
+import type { FormValues, NutritionBaseline } from '../lib/recipeForm';
 
 interface UseNutritionCalculationOptions {
   values: FormValues;
-  /** Gets the result and the signature of the values it was calculated from. */
-  onResult: (info: NutritionalInfo, signature: string) => void;
+  /** What the last calculation (or the loaded recipe) was based on. Sent as `previous` when the form already has nutrition values. */
+  baseline: NutritionBaseline | null;
+  /** Gets the new baseline: the values it was calculated from, plus the result. */
+  onResult: (baseline: NutritionBaseline) => void;
 }
 
 function isAbortError(err: unknown) {
@@ -16,7 +17,7 @@ function isAbortError(err: unknown) {
 }
 
 /** Runs the nutrition estimate: loading state, cancel, and a friendly error message. */
-export function useNutritionCalculation({ values, onResult }: UseNutritionCalculationOptions) {
+export function useNutritionCalculation({ values, baseline, onResult }: UseNutritionCalculationOptions) {
   const [calculating, setCalculating] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const controllerRef = useRef<AbortController | null>(null);
@@ -31,17 +32,29 @@ export function useNutritionCalculation({ values, onResult }: UseNutritionCalcul
     setErrorMessage(null);
     setCalculating(true);
 
+    // Captured now, so the baseline matches what was sent even if the user edits while waiting.
+    const ingredients = completeIngredients(values);
+    const steps = nonEmptySteps(values);
+    const servings = parseServings(values.servings) ?? 1;
     const signature = nutritionSignature(values);
+    // Only a recalculation (the form already shows values) sends the previous recipe.
+    const previous =
+      values.nutritionalInfo && baseline
+        ? {
+            ingredients: baseline.ingredients,
+            steps: baseline.steps,
+            servings: baseline.servings,
+            nutritionalInfo: baseline.nutritionalInfo,
+          }
+        : undefined;
     try {
-      const info = await calculateNutrition(
-        completeIngredients(values),
-        parseServings(values.servings) ?? 1,
-        nonEmptySteps(values),
-        { signal: controller.signal },
-      );
+      const info = await calculateNutrition(ingredients, servings, steps, {
+        signal: controller.signal,
+        previous,
+      });
       if (controller.signal.aborted) return;
       setCalculating(false);
-      onResult(info, signature);
+      onResult({ signature, ingredients, steps, servings, nutritionalInfo: info });
     } catch (err) {
       // A cancelled request is not an error.
       if (isAbortError(err) || controller.signal.aborted) return;

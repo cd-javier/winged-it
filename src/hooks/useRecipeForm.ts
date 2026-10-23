@@ -6,13 +6,13 @@ import {
   emptyStepRow,
   formSnapshot,
   hasErrors,
-  nutritionSignature,
+  nutritionBaseline,
   NO_ERRORS,
   toRecipeData,
   validate,
 } from '../lib/recipeForm';
-import type { FormValues, IngredientRowValue } from '../lib/recipeForm';
-import type { NutritionalInfo, Recipe } from '../types/recipe';
+import type { FormValues, IngredientRowValue, NutritionBaseline } from '../lib/recipeForm';
+import type { Recipe } from '../types/recipe';
 
 type TextField = 'title' | 'description' | 'servings' | 'prepTime' | 'cookTime';
 
@@ -23,9 +23,9 @@ export function useRecipeForm(initial: FormValues) {
   const [values, setValues] = useState(initial);
   // Errors only show after the first failed save, then stay live as the user types.
   const [submitted, setSubmitted] = useState(false);
-  // The nutrition signature at load (when values exist) or at the last calculation.
-  const [calcBaseline, setCalcBaseline] = useState<string | null>(() =>
-    initial.nutritionalInfo ? nutritionSignature(initial) : null,
+  // The recipe and nutrition values at load (when values exist) or at the last calculation. A recalculation starts from these.
+  const [calcBaseline, setCalcBaseline] = useState<NutritionBaseline | null>(() =>
+    nutritionBaseline(initial),
   );
 
   const errors = useMemo(() => (submitted ? validate(values) : NO_ERRORS), [submitted, values]);
@@ -77,10 +77,10 @@ export function useRecipeForm(initial: FormValues) {
   const removeStep = (key: string) =>
     setValues((current) => ({ ...current, steps: current.steps.filter((step) => step.key !== key) }));
 
-  /** Stores a calculation result. It counts as a change, and the baseline moves to the values it was calculated from. */
-  const setNutrition = (nutritionalInfo: NutritionalInfo, signature: string) => {
-    setValues((current) => ({ ...current, nutritionalInfo }));
-    setCalcBaseline(signature);
+  /** Stores a calculation result. It counts as a change, and the baseline becomes the values it was calculated from. */
+  const setNutrition = (baseline: NutritionBaseline) => {
+    setValues((current) => ({ ...current, nutritionalInfo: baseline.nutritionalInfo }));
+    setCalcBaseline(baseline);
   };
 
   /** Turns on live validation. Returns the recipe to save, or null when something is invalid. */
@@ -96,6 +96,7 @@ export function useRecipeForm(initial: FormValues) {
     submitted,
     dirty,
     canCalculate,
+    baseline: calcBaseline,
     setText,
     setImage,
     updateIngredient,

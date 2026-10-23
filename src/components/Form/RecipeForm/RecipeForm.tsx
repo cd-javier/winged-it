@@ -42,6 +42,7 @@ export default function RecipeForm({ heading, initialValues, onSubmit, onCancel 
   const guard = useLeaveGuard(form.dirty);
   const calculation = useNutritionCalculation({
     values: form.values,
+    baseline: form.baseline,
     onResult: form.setNutrition,
   });
   const { values, errors } = form;

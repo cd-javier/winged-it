@@ -25,6 +25,14 @@ export interface NutritionalInfo {
   fiber: number;
 }
 
+/** The recipe and nutrition values a recalculation starts from. Sent to the API so only the differences are re-estimated. */
+export interface NutritionPrevious {
+  ingredients: Ingredient[];
+  steps: string[];
+  servings: number;
+  nutritionalInfo: NutritionalInfo;
+}
+
 export type QuestionCategory =
   | 'quantity'
   | 'timing'

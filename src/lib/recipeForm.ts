@@ -1,4 +1,4 @@
-import type { Ingredient, IngredientUnit, NutritionalInfo, Recipe } from '../types/recipe';
+import type { Ingredient, IngredientUnit, NutritionalInfo, NutritionPrevious, Recipe } from '../types/recipe';
 
 /** The units offered in the unit picker, in display order. The check below fails to compile if one is missing from the IngredientUnit union. */
 export const INGREDIENT_UNITS = [
@@ -251,15 +251,33 @@ export function formSnapshot(values: FormValues): string {
   });
 }
 
+/** The recipe and nutrition values at load or at the last calculation, plus their signature. */
+export interface NutritionBaseline extends NutritionPrevious {
+  signature: string;
+}
+
+/** The baseline for values that already have nutrition, or null when they have none (or the servings do not parse). */
+export function nutritionBaseline(values: FormValues): NutritionBaseline | null {
+  const servings = parseServings(values.servings);
+  if (!values.nutritionalInfo || servings === null) return null;
+  return {
+    signature: nutritionSignature(values),
+    ingredients: completeIngredients(values),
+    steps: nonEmptySteps(values),
+    servings,
+    nutritionalInfo: values.nutritionalInfo,
+  };
+}
+
 /**
  * Whether "calculate" is enabled. The recipe needs a complete ingredient, a step and valid servings. When nutrition values already exist, something the estimate depends on must also differ from the baseline (the values at load or at the last calculation).
  */
-export function canCalculateNutrition(values: FormValues, baseline: string | null): boolean {
+export function canCalculateNutrition(values: FormValues, baseline: NutritionBaseline | null): boolean {
   const ready =
     completeIngredients(values).length > 0 &&
     nonEmptySteps(values).length > 0 &&
     parseServings(values.servings) !== null;
   if (!ready) return false;
   if (!values.nutritionalInfo) return true;
-  return nutritionSignature(values) !== baseline;
+  return nutritionSignature(values) !== baseline?.signature;
 }

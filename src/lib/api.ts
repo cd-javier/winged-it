@@ -2,6 +2,7 @@ import type {
   GenerateQuestionsResult,
   Ingredient,
   NutritionalInfo,
+  NutritionPrevious,
   QuestionAnswer,
   Recipe,
 } from '../types/recipe';
@@ -105,21 +106,27 @@ function roundNutrition(info: NutritionalInfo): NutritionalInfo {
   };
 }
 
-/** Estimates nutrition per serving. The steps are sent too, because the endpoint uses them (for example frying oil). */
+interface CalculateNutritionOptions extends RequestOptions {
+  /** The recipe and values the user is recalculating from. Leave out for a first calculation. */
+  previous?: NutritionPrevious;
+}
+
+/** Estimates nutrition per serving. The steps are sent too, because the endpoint uses them (for example frying oil). With `previous`, only the effect of the differences is estimated. */
 export async function calculateNutrition(
   ingredients: Ingredient[],
   servings: number,
   steps: string[],
-  options: RequestOptions = {},
+  options: CalculateNutritionOptions = {},
 ): Promise<NutritionalInfo> {
   if (useMock) {
     const mock = await import('./mockApi');
     return roundNutrition(await mock.calculateNutrition(ingredients, servings, steps, options));
   }
+  const { previous, signal } = options;
   const info = await post<NutritionalInfo>(
     '/api/recalculate-nutritional-info',
-    { ingredients, servings, steps },
-    options,
+    { ingredients, servings, steps, ...(previous && { previous }) },
+    { signal },
   );
   return roundNutrition(info);
 }
