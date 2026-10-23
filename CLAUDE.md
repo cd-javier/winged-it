@@ -30,7 +30,7 @@ Scope cuts are deliberate (5-week solo timeline): no accounts, no database, no a
 
 ## Conventions
 
-- CSS Modules only. No inline styles, no Tailwind.
+- CSS Modules only. No inline styles, no Tailwind. Exception: setting a CSS custom property from a measured value with `style.setProperty` (for example `--scrollbar-width`, `--app-height`).
 - Use tokens from `src/styles/tokens.css` (`--color-*`, `--font-*`). Design values from Figma (Tailwind output, names like `--semantic/color-surface`) or from screenshots must be converted to our tokens.
 - Mobile-first. The app column is capped by `--app-max-width` (`src/styles/tokens.css`).
 - Button variants: primary, secondary, outline (cancel), destructive. The error (salmon) colour is for destructive actions, the error modal icon, and form errors (field and row error outlines, error messages, the remove-row button).

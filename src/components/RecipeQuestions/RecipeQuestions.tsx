@@ -1,5 +1,6 @@
-import { useId } from 'react';
+import { useId, useRef } from 'react';
 
+import { useVisualViewportHeight } from '../../hooks/useVisualViewportHeight';
 import Button from '../Button/Button';
 import TextArea from '../Form/TextArea/TextArea';
 import SegmentedProgress from '../SegmentedProgress/SegmentedProgress';
@@ -29,9 +30,12 @@ export default function RecipeQuestions({
 }: RecipeQuestionsProps) {
   // useId links the question heading to the textarea.
   const questionId = useId();
+  const screenRef = useRef<HTMLElement>(null);
+  // The question changing while the keyboard is open scrolls the page into place again.
+  useVisualViewportHeight(screenRef, index);
 
   return (
-    <section className={styles.screen}>
+    <section ref={screenRef} className={styles.screen}>
       <header className={styles.header}>
         <h1 className={styles.title}>Let's clarify</h1>
         <p className={styles.subtitle}>

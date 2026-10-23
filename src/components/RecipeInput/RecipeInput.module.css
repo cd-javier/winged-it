@@ -2,8 +2,19 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  min-height: 100dvh;
+  min-height: var(--app-height, 100dvh);
   padding: var(--space-3);
+}
+
+/* Animates the height only while the keyboard is open or just closed (the hook sets data-keyboard). Always on, it would also animate the 100dvh changes of Safari's toolbars. */
+.screen[data-keyboard] {
+  transition: min-height var(--transition-duration) var(--transition-easing);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen[data-keyboard] {
+    transition: none;
+  }
 }
 
 .header {
@@ -48,6 +59,10 @@
 .field .textarea {
   flex: 1;
   padding-bottom: calc(var(--counter-zone) + var(--space-2));
+  /* When Safari scrolls this field into view, it leaves room for the buttons below: the gap, the buttons and the screen padding. */
+  scroll-margin-bottom: calc(3rem + 2 * var(--space-3));
+  /* Two lines of text plus the padding. */
+  min-height: calc(2lh + var(--control-padding-block) + var(--counter-zone) + var(--space-2));
 }
 
 .counter {

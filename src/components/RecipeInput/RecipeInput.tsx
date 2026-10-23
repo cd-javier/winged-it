@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef } from 'react';
 
+import { useVisualViewportHeight } from '../../hooks/useVisualViewportHeight';
 import { countWords, MIN_WORDS } from '../../lib/wordCount';
 import Button from '../Button/Button';
 import Field from '../Form/Field/Field';
@@ -20,6 +21,7 @@ export default function RecipeInput({ text, onTextChange, onBack, onContinue }: 
   const enough = words >= MIN_WORDS;
 
   const screenRef = useRef<HTMLElement>(null);
+  useVisualViewportHeight(screenRef);
 
   // CSS cannot read the textarea's scrollbar width, so it is measured and handed to the styles as a variable. It is 0 for overlay scrollbars (phones) and before the text overflows.
   useEffect(() => {
