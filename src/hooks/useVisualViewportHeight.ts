@@ -11,7 +11,7 @@ const MAX_SETTLE_FRAMES = 30;
 const RELEASE_MARGIN_MS = 100;
 
 /**
- * While a textarea has focus and the on-screen keyboard is open, sets `--app-height` on the root element to the visible height, so the screen shrinks to the space above the keyboard. Removes it when the keyboard closes, when pinch-zoomed, and on unmount.
+ * While a textarea has focus and the on-screen keyboard is open, sets `--app-height` on the root element to the visible height, so the screen shrinks to the space above the keyboard. Removes it when the keyboard closes and on unmount. While pinch-zoomed with a field focused, nothing changes.
  *
  * Also marks the screen with `data-keyboard` from the moment the variable is set until its height transition has finished, so the CSS only animates `min-height` for that variable and not for the `100dvh` changes Safari's toolbars cause.
  *
@@ -35,10 +35,12 @@ export function useVisualViewportHeight(screenRef: RefObject<HTMLElement | null>
     let releaseTimer = 0;
     let releaseListener: ((event: TransitionEvent) => void) | null = null;
 
+    // While pinch-zoomed, the visual viewport's height is the zoomed one and says nothing about the keyboard.
+    const isZoomed = () => Math.abs(viewport.scale - 1) >= SCALE_TOLERANCE;
+    const hasFocus = () => document.activeElement instanceof HTMLTextAreaElement;
+
     const isKeyboardOpen = () =>
-      document.activeElement instanceof HTMLTextAreaElement &&
-      Math.abs(viewport.scale - 1) < SCALE_TOLERANCE &&
-      viewport.height < KEYBOARD_RATIO * window.innerHeight;
+      hasFocus() && viewport.height < KEYBOARD_RATIO * window.innerHeight;
 
     // The screen's height when the textarea is at its minimum height. Added up from the parts, because while the height transition runs, offsetHeight and scrollHeight are in-between values.
     const naturalHeight = () => {
@@ -75,6 +77,13 @@ export function useVisualViewportHeight(screenRef: RefObject<HTMLElement | null>
 
       const tick = () => {
         if (run !== scrollRun || !open) return;
+        // Zoomed: wait without counting, and start over from the real height once the zoom is gone.
+        if (isZoomed()) {
+          last = -1;
+          stable = 0;
+          requestAnimationFrame(tick);
+          return;
+        }
         frames++;
         stable = viewport.height === last ? stable + 1 : 0;
         last = viewport.height;
@@ -115,6 +124,9 @@ export function useVisualViewportHeight(screenRef: RefObject<HTMLElement | null>
     const update = () => {
       frame = 0;
 
+      // Zoomed with a field focused: leave everything as it is until the zoom ends. Without focus the keyboard is closed, so that case falls through and clears the variable.
+      if (isZoomed() && hasFocus()) return;
+
       if (isKeyboardOpen()) {
         cancelRelease();
         screen.setAttribute('data-keyboard', '');
@@ -140,7 +152,7 @@ export function useVisualViewportHeight(screenRef: RefObject<HTMLElement | null>
 
     // The user took over: do not scroll for them any more.
     const onUserScroll = (event: Event) => {
-      if (event.target instanceof HTMLTextAreaElement) return;
+      if (event.target instanceof HTMLTextAreaElement || isZoomed()) return;
       scrollRun++;
     };
 
