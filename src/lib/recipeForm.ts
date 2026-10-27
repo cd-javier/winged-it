@@ -123,10 +123,10 @@ function parseInteger(text: string, min: number, max: number): number | null {
   return value >= min && value <= max ? value : null;
 }
 
-/** Blank, non-numeric and negative quantities are invalid. 0 is valid and means "to taste". A comma works as the decimal separator. */
+/** Non-numeric and negative quantities are invalid. Blank counts as 0, and 0 means "to taste". A comma works as the decimal separator. */
 export function parseQuantity(text: string): number | null {
   const trimmed = text.trim().replace(',', '.');
-  if (trimmed === '') return null;
+  if (trimmed === '') return 0;
   const value = Number(trimmed);
   return Number.isFinite(value) && value >= 0 ? value : null;
 }
