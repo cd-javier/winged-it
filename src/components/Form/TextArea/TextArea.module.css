@@ -21,6 +21,9 @@
   font-size: var(--font-size-sm);
   overflow-wrap: break-word;
   white-space: pre-wrap;
+  /* The copy sets the cell's height, so capping it caps the textarea. A class can set --grow-max-height on the wrapper. */
+  max-height: var(--grow-max-height, none);
+  overflow: hidden;
   visibility: hidden;
 }
 
@@ -35,5 +38,7 @@
 
 .growing {
   min-width: 0;
-  overflow: hidden;
+  /* Scrolls once the content passes --grow-max-height. Without a cap it never overflows. */
+  overflow-x: hidden;
+  overflow-y: auto;
 }

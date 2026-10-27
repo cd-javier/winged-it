@@ -40,6 +40,7 @@ export default function StepRow({
               {...controlProps}
               variant="underline"
               autoGrow
+              className={styles.textarea}
               placeholder="Describe this step"
               value={text}
               onChange={(event) => onChange(event.target.value)}

@@ -4,6 +4,11 @@
   gap: var(--space-2);
 }
 
+.textarea {
+  /* Four lines of text plus the underline input's padding and bottom border. */
+  --grow-max-height: calc(4lh + 2 * var(--control-padding-underline) + 1px);
+}
+
 .text {
   flex: 1;
   min-width: 0;
